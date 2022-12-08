@@ -1,0 +1,78 @@
+{% extends 'layout/base.html' %}
+{% block js %}
+<script>
+    function check()
+    {
+
+
+    }
+
+</script>
+{% endblock %}
+{% block content %}
+<div class="col-md-7 col-sm-12  " style="margin:auto" id="check_form">
+    <h3 style="justify-content: center;align-items:center;">Register</h3>
+    <form method="post" enctype="multipart/form-data" action="/register" style="justify-content: center;">
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" class="form-control" required id="first_name" placeholder="Nhập họ tên đệm"
+                   name="first_name">
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+            <label for="first_name">Họ tên
+                <pr class="text-danger">*</pr>
+            </label>
+
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="birth_day" class="text-primary">Ngày sinh
+                <pr class="text-danger">*</pr>
+            </label>
+            <div class="d-flex align-items-center flex-fill me-sm1 my-sm-0 border-bottom position-relative">
+                <input type="date" required class="form-control" required id="birth_day"
+                       name="birth_day">
+                <div class="label" id="depart"></div>
+            </div>
+
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" class="form-control" required id="email" name="email" placeholder="Nhập Email">
+            <label for="email">Email
+                <pr class="text-danger">*</pr>
+            </label>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" class="form-control" id="sdt" name="sdt" placeholder="Nhập Số Điện Thoại" required>
+            <label for="sdt">Số Điện Thoại
+                <pr class="text-danger">*</pr>
+            </label>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Nhập Tên Đăng nhập"
+                   required>
+            <label for="user_name">Tên đăng nhập
+                <pr class="text-danger">*</pr>
+            </label>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input type="password" class="form-control" id="pass" name="pass" placeholder="Nhập Mật Khẩu"
+                   required>
+            <label for="pass">Mật Khẩu
+                <pr class="text-danger">*</pr>
+            </label>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+
+            <input type="password" class="form-control" id="re_pass" name="re_pass" placeholder="Xác Nhận Nhập Mật Khẩu"
+                   required >
+            <label for="re_pass">Xác Nhận Mật Khẩu
+                <pr class="text-danger">*</pr>
+            </label>
+            <div id="feedback" style="visibility:hidden;" class="text-danger">Mật khẩu không giống nhau.</div>
+        </div>
+        <div>
+            <input type="submit" value="Đăng ký" class="btn btn-danger" onclick="check()" id="sub"/>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

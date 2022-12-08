@@ -1,0 +1,505 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{url_for('static', filename='css/chuyenBays.css')}}" , rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+{% endblock %}
+{% block content %}
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <ul class="navbar-nav nav nav-pills">
+        <li class="nav-item active">
+            <a class="nav-link active" data-toggle="pill" href="#home">Tìm Vé</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#khuHoi">Khứ hồi</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#motChieu">Một chiều</a>
+        </li>
+    </ul>
+</nav>
+<div class="tab-content">
+    <div class="tab-pane container fade" id="home"></div>
+    <div class="tab-pane container fade" id="khuHoi">
+        <div class="wrapper bg-white">
+            <form action="#">
+                <div class="form-group border-bottom d-flex align-items-center justify-content-between flex-wrap">
+
+                </div>
+                <div class="form-group d-sm-flex margin">
+                    <div class="d-flex align-items-center flex-fill me-sm-1 my-sm-0 my-4 border-bottom position-relative">
+                        <div>
+                            <p style="padding-right: 5%; margin-bottom: 0;">From</p>
+                            <select class="form-select" aria-label="Default select example" id="op1">
+                                <option selected>Chọn điểm đi</option>
+                                {% for t in ten_diem_di %}
+                                <option value="{{t}}">{{t}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center flex-fill ms-sm-1 my-sm-0 my-4 border-bottom position-relative">
+                        <div>
+                            <p style="padding-right: 5%; margin-bottom: 0;">To</p>
+                            <select class="form-select" aria-label="Default select example" id="op2">
+                                <option selected>Chọn điểm đến</option>
+                                {% for t in ten_diem_den %}
+                                <option value="{{t}}">{{t}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group d-sm-flex margin">
+                    <div class="d-flex align-items-center flex-fill me-sm1 my-sm-0 border-bottom position-relative">
+                        <input type="date" required placeholder="Depart Date" class="form-control">
+                        <div class="label" id="depart"></div>
+                    </div>
+                    <div class="d-flex align-items-center flex-fill ms-sm-1 my-sm-0 my-4 border-bottom position-relative">
+                        <input type="date" required placeholder="Return Date" class="form-control">
+                        <div class="label" id="return"></div>
+                    </div>
+                </div>
+                <div class="form-group border-bottom d-flex align-items-center position-relative">
+                    <input type="text" required placeholder="Traveller(s)" class="form-control">
+                    <div class="label" id="psngr"></div>
+
+                </div>
+                <div class="form-group my-3">
+                    <div class="btn btn-primary rounded-0 d-flex justify-content-center text-center p-3">Search Flights
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <!--    <div>-->
+        <!--        <br>-->
+        <!--        &lt;!&ndash; Nav pills &ndash;&gt;-->
+        <!--        <ul class="nav nav-pills" role="tablist">-->
+        <!--            <li class="nav-item">-->
+        <!--                <a class="nav-link active" data-bs-toggle="pill" href="#menu1">Khứ hồi</a>-->
+        <!--            </li>-->
+        <!--            <li class="nav-item">-->
+        <!--                <a class="nav-link" data-bs-toggle="pill" href="#menu2">1 chiều</a>-->
+        <!--            </li>-->
+        <!--        </ul>-->
+
+        <!--        &lt;!&ndash; Tab panes &ndash;&gt;-->
+        <!--        <div class="tab-content" style="padding-bottom: 1rem; background-color: lightyellow;">-->
+        <!--            <div id="menu1" class="container tab-pane active">-->
+        <!--                <br>-->
+
+
+        <!--                <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;">-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; ">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">From</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op1">-->
+        <!--                            <option selected>Chọn điểm đi</option>-->
+        <!--                            {% for t in ten_diem_di %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+        <!--                    <div style="padding: 0% 5%; margin-bottom: 0">-->
+        <!--                        <a href="#" onclick="change()">-->
+        <!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"-->
+        <!--                                 class="bi bi-arrow-left-right" viewBox="0 0 16 16">-->
+        <!--                                <path fill-rule="evenodd"-->
+        <!--                                      d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>-->
+        <!--                            </svg>-->
+        <!--                        </a>-->
+        <!--                    </div>-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; margin-left:10">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">To</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op2">-->
+        <!--                            <option selected>Chọn điểm đến</option>-->
+        <!--                            {% for t in ten_diem_den %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--                <div style="display: flex; flex-wrap: wrap; align-items: flex-end;justify-content: center;margin-top:1rem">-->
+
+
+        <!--                    <div>-->
+        <!--                        <section class="container">-->
+        <!--                            <form>-->
+        <!--                                <div class="row form-group">-->
+        <!--                                    <label for="date" class=" col-form-label">Ngày khởi hành</label>-->
+        <!--                                    <div>-->
+        <!--                                        <div class="input-group date" id="datepicker">-->
+        <!--                                            <input type="text" class="form-control">-->
+        <!--                                            <span class="input-group-append">-->
+        <!--                            <span class="input-group-text bg-white">-->
+        <!--                                <i class="fa fa-calendar"></i>-->
+        <!--                            </span>-->
+        <!--                        </span>-->
+        <!--                                        </div>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </form>-->
+        <!--                        </section>-->
+
+        <!--                        <script type="text/javascript">-->
+        <!--                        $(function() {-->
+        <!--                            $('#datepicker').datepicker();-->
+        <!--                        });-->
+
+
+        <!--                        </script>-->
+        <!--                    </div>-->
+        <!--                    <div style="padding=1rem">-->
+        <!--                        <section class="container">-->
+        <!--                            <form>-->
+        <!--                                <div class="row form-group">-->
+        <!--                                    <label for="date" class="col-form-label">Ngày quay lại</label>-->
+        <!--                                    <div>-->
+        <!--                                        <div class="input-group date" id="datepicker2">-->
+        <!--                                            <input type="text" class="form-control">-->
+        <!--                                            <span class="input-group-append">-->
+        <!--                            <span class="input-group-text bg-white">-->
+        <!--                                <i class="fa fa-calendar"></i>-->
+        <!--                            </span>-->
+        <!--                        </span>-->
+        <!--                                        </div>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </form>-->
+        <!--                        </section>-->
+
+        <!--                        <script type="text/javascript">-->
+        <!--                        $(function() {-->
+        <!--                            $('#datepicker2').datepicker();-->
+        <!--                        });-->
+
+
+        <!--                        </script>-->
+        <!--                    </div>-->
+        <!--                    <div>-->
+        <!--                        <button type="button" class="btn btn-secondary" style="margin: 1rem">Secondary</button>-->
+        <!--                    </div>-->
+
+        <!--                </div>-->
+
+
+        <!--            </div>-->
+
+
+        <!--            <div id="menu2" class="container tab-pane fade">-->
+        <!--                <br>-->
+
+        <!--                <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content: center;">-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; ">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">From</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op1">-->
+        <!--                            <option selected>Chọn điểm đi</option>-->
+        <!--                            {% for t in ten_diem_di %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+        <!--                    <div style="padding: 0% 5%; margin-bottom: 0">-->
+        <!--                        <a href="#" onclick="change()">-->
+        <!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"-->
+        <!--                                 class="bi bi-arrow-left-right" viewBox="0 0 16 16">-->
+        <!--                                <path fill-rule="evenodd"-->
+        <!--                                      d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>-->
+        <!--                            </svg>-->
+        <!--                        </a>-->
+        <!--                    </div>-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; margin-left:10">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">To</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op2">-->
+        <!--                            <option selected>Chọn điểm đến</option>-->
+        <!--                            {% for t in ten_diem_den %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+
+        <!--                </div>-->
+        <!--                <div style="display:flex;flex-wrap:wrap;align-items: flex-end;justify-content: center;margin-top:1rem">-->
+        <!--                    <div>-->
+        <!--                        <section class="container">-->
+        <!--                            <form>-->
+        <!--                                <div class="row form-group">-->
+        <!--                                    <label for="date" class=" col-form-label">Ngày khởi hành</label>-->
+        <!--                                    <div class="col-sm-8">-->
+        <!--                                        <div class="input-group date" id="datepicker3">-->
+        <!--                                            <input type="text" class="form-control">-->
+        <!--                                            <span class="input-group-append">-->
+        <!--                            <span class="input-group-text bg-white">-->
+        <!--                                <i class="fa fa-calendar"></i>-->
+        <!--                            </span>-->
+        <!--                        </span>-->
+        <!--                                        </div>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </form>-->
+        <!--                        </section>-->
+
+        <!--                        <script type="text/javascript">-->
+        <!--                        $(function() {-->
+        <!--                            $('#datepicker3').datepicker();-->
+        <!--                        });-->
+
+
+        <!--                        </script>-->
+        <!--                    </div>-->
+        <!--                    <div>-->
+        <!--                        <button type="button" class="btn btn-secondary" style="margin: 1rem">Secondary</button>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+
+
+    </div>
+    <div class="tab-pane container fade" id="motChieu">
+        <div class="wrapper bg-white">
+            <form action="#">
+                <div class="form-group border-bottom d-flex align-items-center justify-content-between flex-wrap">
+
+                </div>
+                <div class="form-group d-sm-flex margin">
+                    <div class="d-flex align-items-center flex-fill me-sm-1 my-sm-0 my-4 border-bottom position-relative">
+                        <div>
+                            <p style="padding-right: 5%; margin-bottom: 0;">From</p>
+                            <select class="form-select" aria-label="Default select example" id="op1">
+                                <option selected>Chọn điểm đi</option>
+                                {% for t in ten_diem_di %}
+                                <option value="{{t}}">{{t}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center flex-fill ms-sm-1 my-sm-0 my-4 border-bottom position-relative">
+                        <div>
+                            <p style="padding-right: 5%; margin-bottom: 0;">To</p>
+                            <select class="form-select" aria-label="Default select example" id="op2">
+                                <option selected>Chọn điểm đến</option>
+                                {% for t in ten_diem_den %}
+                                <option value="{{t}}">{{t}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group d-sm-flex margin">
+                    <div class="d-flex align-items-center flex-fill me-sm1 my-sm-0 border-bottom position-relative">
+                        <input type="date" required placeholder="Depart Date" class="form-control">
+                        <div class="label" id="depart"></div>
+                    </div>
+                </div>
+                <div class="form-group border-bottom d-flex align-items-center position-relative">
+                    <input type="text" required placeholder="Traveller(s)" class="form-control">
+                    <div class="label" id="psngr"></div>
+
+                </div>
+                <div class="form-group my-3">
+                    <div class="btn btn-primary rounded-0 d-flex justify-content-center text-center p-3">Search Flights
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <!--    <div>-->
+        <!--        <br>-->
+        <!--        &lt;!&ndash; Nav pills &ndash;&gt;-->
+        <!--        <ul class="nav nav-pills" role="tablist">-->
+        <!--            <li class="nav-item">-->
+        <!--                <a class="nav-link active" data-bs-toggle="pill" href="#menu1">Khứ hồi</a>-->
+        <!--            </li>-->
+        <!--            <li class="nav-item">-->
+        <!--                <a class="nav-link" data-bs-toggle="pill" href="#menu2">1 chiều</a>-->
+        <!--            </li>-->
+        <!--        </ul>-->
+
+        <!--        &lt;!&ndash; Tab panes &ndash;&gt;-->
+        <!--        <div class="tab-content" style="padding-bottom: 1rem; background-color: lightyellow;">-->
+        <!--            <div id="menu1" class="container tab-pane active">-->
+        <!--                <br>-->
+
+
+        <!--                <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;">-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; ">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">From</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op1">-->
+        <!--                            <option selected>Chọn điểm đi</option>-->
+        <!--                            {% for t in ten_diem_di %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+        <!--                    <div style="padding: 0% 5%; margin-bottom: 0">-->
+        <!--                        <a href="#" onclick="change()">-->
+        <!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"-->
+        <!--                                 class="bi bi-arrow-left-right" viewBox="0 0 16 16">-->
+        <!--                                <path fill-rule="evenodd"-->
+        <!--                                      d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>-->
+        <!--                            </svg>-->
+        <!--                        </a>-->
+        <!--                    </div>-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; margin-left:10">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">To</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op2">-->
+        <!--                            <option selected>Chọn điểm đến</option>-->
+        <!--                            {% for t in ten_diem_den %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--                <div style="display: flex; flex-wrap: wrap; align-items: flex-end;justify-content: center;margin-top:1rem">-->
+
+
+        <!--                    <div>-->
+        <!--                        <section class="container">-->
+        <!--                            <form>-->
+        <!--                                <div class="row form-group">-->
+        <!--                                    <label for="date" class=" col-form-label">Ngày khởi hành</label>-->
+        <!--                                    <div>-->
+        <!--                                        <div class="input-group date" id="datepicker">-->
+        <!--                                            <input type="text" class="form-control">-->
+        <!--                                            <span class="input-group-append">-->
+        <!--                            <span class="input-group-text bg-white">-->
+        <!--                                <i class="fa fa-calendar"></i>-->
+        <!--                            </span>-->
+        <!--                        </span>-->
+        <!--                                        </div>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </form>-->
+        <!--                        </section>-->
+
+        <!--                        <script type="text/javascript">-->
+        <!--                        $(function() {-->
+        <!--                            $('#datepicker').datepicker();-->
+        <!--                        });-->
+
+
+        <!--                        </script>-->
+        <!--                    </div>-->
+        <!--                    <div style="padding=1rem">-->
+        <!--                        <section class="container">-->
+        <!--                            <form>-->
+        <!--                                <div class="row form-group">-->
+        <!--                                    <label for="date" class="col-form-label">Ngày quay lại</label>-->
+        <!--                                    <div>-->
+        <!--                                        <div class="input-group date" id="datepicker2">-->
+        <!--                                            <input type="text" class="form-control">-->
+        <!--                                            <span class="input-group-append">-->
+        <!--                            <span class="input-group-text bg-white">-->
+        <!--                                <i class="fa fa-calendar"></i>-->
+        <!--                            </span>-->
+        <!--                        </span>-->
+        <!--                                        </div>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </form>-->
+        <!--                        </section>-->
+
+        <!--                        <script type="text/javascript">-->
+        <!--                        $(function() {-->
+        <!--                            $('#datepicker2').datepicker();-->
+        <!--                        });-->
+
+
+        <!--                        </script>-->
+        <!--                    </div>-->
+        <!--                    <div>-->
+        <!--                        <button type="button" class="btn btn-secondary" style="margin: 1rem">Secondary</button>-->
+        <!--                    </div>-->
+
+        <!--                </div>-->
+
+
+        <!--            </div>-->
+
+
+        <!--            <div id="menu2" class="container tab-pane fade">-->
+        <!--                <br>-->
+
+        <!--                <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content: center;">-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; ">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">From</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op1">-->
+        <!--                            <option selected>Chọn điểm đi</option>-->
+        <!--                            {% for t in ten_diem_di %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+        <!--                    <div style="padding: 0% 5%; margin-bottom: 0">-->
+        <!--                        <a href="#" onclick="change()">-->
+        <!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"-->
+        <!--                                 class="bi bi-arrow-left-right" viewBox="0 0 16 16">-->
+        <!--                                <path fill-rule="evenodd"-->
+        <!--                                      d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>-->
+        <!--                            </svg>-->
+        <!--                        </a>-->
+        <!--                    </div>-->
+        <!--                    <div style="width:25%; display:flex; align-items:center; margin-left:10">-->
+        <!--                        <p style="padding-right: 5%; margin-bottom: 0;">To</p>-->
+        <!--                        <select class="form-select" aria-label="Default select example" id="op2">-->
+        <!--                            <option selected>Chọn điểm đến</option>-->
+        <!--                            {% for t in ten_diem_den %}-->
+        <!--                            <option value="{{t}}">{{t}}</option>-->
+        <!--                            {% endfor %}-->
+        <!--                        </select>-->
+        <!--                    </div>-->
+
+        <!--                </div>-->
+        <!--                <div style="display:flex;flex-wrap:wrap;align-items: flex-end;justify-content: center;margin-top:1rem">-->
+        <!--                    <div>-->
+        <!--                        <section class="container">-->
+        <!--                            <form>-->
+        <!--                                <div class="row form-group">-->
+        <!--                                    <label for="date" class=" col-form-label">Ngày khởi hành</label>-->
+        <!--                                    <div class="col-sm-8">-->
+        <!--                                        <div class="input-group date" id="datepicker3">-->
+        <!--                                            <input type="text" class="form-control">-->
+        <!--                                            <span class="input-group-append">-->
+        <!--                            <span class="input-group-text bg-white">-->
+        <!--                                <i class="fa fa-calendar"></i>-->
+        <!--                            </span>-->
+        <!--                        </span>-->
+        <!--                                        </div>-->
+        <!--                                    </div>-->
+        <!--                                </div>-->
+        <!--                            </form>-->
+        <!--                        </section>-->
+
+        <!--                        <script type="text/javascript">-->
+        <!--                        $(function() {-->
+        <!--                            $('#datepicker3').datepicker();-->
+        <!--                        });-->
+
+
+        <!--                        </script>-->
+        <!--                    </div>-->
+        <!--                    <div>-->
+        <!--                        <button type="button" class="btn btn-secondary" style="margin: 1rem">Secondary</button>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+
+
+    </div>
+</div>
+
+{% endblock %}
