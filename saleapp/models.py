@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship, backref
 from flask_sqlalchemy import SQLAlchemy
 from saleapp import db, app
 from enum import Enum as user_enum
+from flask_login import UserMixin
 
 
 class base_model(db.Model):
@@ -93,7 +94,7 @@ class loai_nguoi_dung(user_enum):
     ND = 3
 
 
-class Nguoi_dung(base_model):
+class Nguoi_dung(base_model, UserMixin):
     __tablename__ = "nguoi_dung"
     ho_va_ten = Column(String(150), nullable=False)
     ngay_thang_nam_sinh = Column(Date, nullable=False)
@@ -115,10 +116,12 @@ class Nguoi_dung(base_model):
 class Hoa_don(base_model):
     __tablename__ = "hoa_don"
     thoi_gian_thanh_toan = Column(DateTime, nullable=False)
-    so_luong_ve = Column(Integer, nullable=False)
-    tong_tien = Column(Float, nullable=False)
+    trang_thai = Column(Boolean, default= False)
+    so_luong_ve = Column(Integer, nullable=False, default=0)
+    tong_tien = Column(Float, nullable=False, default=0)
     Ve_may_bays = relationship('Ve_may_bay', backref='hoa_don', lazy=True)
     nguoi_thanh_toan = Column(Integer, ForeignKey(Nguoi_dung.id), nullable=False)
+
 
 class Lich_bay(base_model):
     __tablename__ = "lich_bay"
@@ -127,17 +130,19 @@ class Lich_bay(base_model):
     so_ghe_loai_2 = Column(Integer, nullable=False)
     chuyen_bay_id = Column(Integer, ForeignKey(Chuyen_bay.id), nullable=False)
     Ve_may_bays = relationship('Ve_may_bay', backref='lich_bay', lazy=True)
+
     def __str__(self):
         return str(self.thoi_gian_khoi_hanh)
 
+
 class Ve_may_bay(base_model):
-    __tablename__="ve_may_bay"
+    __tablename__ = "ve_may_bay"
     ten = Column(String(100))
     cccd = Column(String(12))
     ngay_sinh = Column(Date)
     gia_tien = Column(Float, nullable=False)
     hang_ve = Column(String(20), nullable=False)
-    trang_thai = Column(Boolean, default= False)
+    trang_thai = Column(Boolean, default=False)
     Ngay_xuat_ve = Column(DateTime)
     ghe_id = Column(Integer, ForeignKey(Ghe.id))
     chuyen_bay_id = Column(Integer, ForeignKey(Chuyen_bay.id), nullable=False)
@@ -146,117 +151,6 @@ class Ve_may_bay(base_model):
     hoa_don_id = Column(Integer, ForeignKey(Hoa_don.id))
 
 
-
-
-
 with app.app_context():
     if __name__ == '__main__':
-
-        # db.create_all()
-        tao_ve = [
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 2,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 3,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 4,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 5,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 6,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 7,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 8,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 9,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "normal",
-                "ghe_id": 10,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "vip",
-                "ghe_id": 11,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "vip",
-                "ghe_id": 12,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "vip",
-                "ghe_id": 13,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "vip",
-                "ghe_id": 14,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-            {
-                "gia_ve": 2500000,
-                "hang_ve": "vip",
-                "ghe_id": 15,
-                "chuyen_bay_id": 1,
-                "ngay_di": 1
-            },
-        ]
-        for t in tao_ve:
-            ve = Ve_may_bay(gia_tien=t['gia_ve'], hang_ve=t['hang_ve'],
-                            ghe_id=t['ghe_id'], chuyen_bay_id=t['chuyen_bay_id'], lich_bay_id=t['ngay_di'])
-            db.session.add(ve)
-        db.session.commit()
-
-
+        db.create_all()

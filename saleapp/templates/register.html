@@ -46,14 +46,14 @@
  <div id="register" class="col-md-8" style="margin:auto">
      <div class="h1 text-bg-dark" style="padding:1rem; text-align:center">Register</div>
             <br>
-            <form onsubmit="return check_pass()"  method="post"
+            <form onsubmit="return check_pass()"  method="post" enctype="multipart/form-data"
                   action="{{url_for('user_register')}}"
                   style="justify-content: center;align-items=center">
 
 
                 <!--nhập name-->
                 <div class="form-floating mb-3 mt-3">
-                    <input type="text" class="form-control" required id="first_name" placeholder="Nhập họ tên"
+                    <input type="text" class="form-control" required id="first_name"  placeholder="Nhập họ tên"
                            name="first_name">
                     <label for="first_name">Họ tên
                         <pr class="text-danger">*</pr>
@@ -152,7 +152,7 @@
 
                 <!--nhập đường dẫn ảnh-->
                 <div class="form-floating mb-3 mt-3">
-                    <input type="file" class="form-control-file border" id="avatar" name="avatar"
+                    <input type="file" accept="image/png" class="form-control-file border" id="avatar" name="avatar"
                            placeholder="chọn ảnh avatar">
                 </div>
 

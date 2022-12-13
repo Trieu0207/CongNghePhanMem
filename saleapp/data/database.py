@@ -127,7 +127,6 @@ class Hoa_don(base_model):
 
 
 class Ve_may_bay(base_model):
-    ho_ten_lot = Column(String(100), nullable=False)
     ten = Column(String(100), nullable=False, unique=True)
     cccd = Column(String(12), nullable=False)
     ngay_sinh = Column(DateTime, nullable=False)
@@ -761,109 +760,278 @@ with app.app_context():
                       Chiec_may_bay_id=t['chiec_may_bay'])
             db.session.add(ghe)
         db.session.commit()
+        tao_chuyen_bay = [{
+
+        }]
         tao_ve = [
             {
-                "gia_ve":2500000,
-                "hang_ve": "normal",
-                "ghe_id": 2,
-                "chuyen_bay_id":1,
-                "ngay_di":1
-            },
-            {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 3,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 4,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 5,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 6,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 7,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 8,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 9,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
                 "hang_ve": "normal",
-                "ghe_id": 10,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
                 "gia_ve": 2500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 1,
+                "ngay_di": 1
+            },
+            {
+                "gia_ve": 3000000,
                 "hang_ve": "vip",
-                "ghe_id": 11,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
-                "gia_ve": 2500000,
+                "gia_ve": 3000000,
                 "hang_ve": "vip",
-                "ghe_id": 12,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
-                "gia_ve": 2500000,
+                "gia_ve": 3000000,
                 "hang_ve": "vip",
-                "ghe_id": 13,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
-                "gia_ve": 2500000,
+                "gia_ve": 3000000,
                 "hang_ve": "vip",
-                "ghe_id": 14,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
             {
-                "gia_ve": 2500000,
+                "gia_ve": 3000000,
                 "hang_ve": "vip",
-                "ghe_id": 15,
                 "chuyen_bay_id": 1,
                 "ngay_di": 1
             },
         ]
+        tao_ve_2 = [
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 4500000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 6000000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 6000000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 6000000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 6000000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+            {
+                "gia_ve": 6000000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 2,
+                "ngay_di": 2
+            },
+        ]
+        tao_ve_3 = [
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 1200000,
+                "hang_ve": "normal",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 3600000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 3600000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 3600000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 3600000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+            {
+                "gia_ve": 3600000,
+                "hang_ve": "vip",
+                "chuyen_bay_id": 3,
+                "ngay_di": 3
+            },
+        ]
         for t in tao_ve:
-            ve = Ve_may_bay(gia_ve=t['gia_ve'], hang_ve=t['hang_ve'],
-                      ghe_id=t['ghe_id'], chuye_bay_id = t['chuyen_bay_id'], ngay_di = t['ngay_di'])
+            ve = Ve_may_bay(gia_tien=t['gia_ve'], hang_ve=t['hang_ve'],
+                            chuyen_bay_id=t['chuyen_bay_id'], lich_bay_id=t['ngay_di'])
             db.session.add(ve)
-
+        for t in tao_ve_2:
+            ve = Ve_may_bay(gia_tien=t['gia_ve'], hang_ve=t['hang_ve'],
+                            chuyen_bay_id=t['chuyen_bay_id'], lich_bay_id=t['ngay_di'])
+            db.session.add(ve)
+        for t in tao_ve_3:
+            ve = Ve_may_bay(gia_tien=t['gia_ve'], hang_ve=t['hang_ve'],
+                            chuyen_bay_id=t['chuyen_bay_id'], lich_bay_id=t['ngay_di'])
+            db.session.add(ve)
+        db.session.commit()
 

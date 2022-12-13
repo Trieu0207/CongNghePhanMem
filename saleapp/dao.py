@@ -1,10 +1,11 @@
 from saleapp import app, db
-from saleapp.models import Tuyen_bay, Chuyen_bay, Nguoi_dung, San_bay, Lich_bay, Ghe, Ve_may_bay
+from saleapp.models import Tuyen_bay, Chuyen_bay, Nguoi_dung, San_bay, Lich_bay, Ghe, Ve_may_bay, Hoa_don
 from sqlalchemy import or_, and_
+from flask_login import current_user
 import hashlib
 import re
 from datetime import datetime
-from datetime import date
+import cloudinary.uploader
 
 
 def load_tuyen_bay():
@@ -44,11 +45,13 @@ def login(user_name, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     try:
         check_login(user_name, password)
+        return Nguoi_dung.query.filter(Nguoi_dung.ten_dang_nhap.__eq__(user_name),
+                                       Nguoi_dung.mat_khau.__eq__(password)).first()
     except Exception as ex:
         raise Exception(ex)
 
 
-def register(ho_va_ten, ngay_sinh, email, sdt, ten_dang_nhap, mat_khau, **kwargs):
+def register(ho_va_ten, ngay_sinh, email, sdt, ten_dang_nhap, mat_khau, avatar):
     ds_nguoi_dung = []
     check_pass = mat_khau
     if not strong_pass(check_pass):
@@ -68,7 +71,7 @@ def register(ho_va_ten, ngay_sinh, email, sdt, ten_dang_nhap, mat_khau, **kwargs
                                 sdt=sdt.strip(),
                                 ten_dang_nhap=ten_dang_nhap.strip(),
                                 mat_khau=password,
-                                avatar=kwargs.get('avatar'))
+                                avatar=avatar)
         with app.app_context():
             db.session.add(nguoi_dung)
             db.session.commit()
@@ -135,7 +138,8 @@ def search_san_bay_by_id(san_bay_id):
     else:
         raise Exception("Không có dữ liệu")
 
-
+def find_lich_bay(chuyen_bay_id):
+    return Lich_bay.query.filter(Lich_bay.chuyen_bay_id == chuyen_bay_id).first()
 def load_lich_bay(chuyen_bay):
     query = []
     lich_bay = Lich_bay.query.all()
@@ -148,10 +152,17 @@ def load_lich_bay(chuyen_bay):
 
 def load_ds_ghe(chuyen_bay_id):
     return Ghe.query.filter(Ghe.Chiec_may_bay_id == chuyen_bay_id).all()
-
+def reload_ds_ghe(chuyen_bay_id):
+    ds_ghe = Ghe.query.filter(Ghe.Chiec_may_bay_id == chuyen_bay_id).all()
+    for d in ds_ghe:
+        if not d.ve_may_bays:
+            d.trang_thai = False
+            db.session.add(d)
+        db.session.commit()
 
 def load_table_ghe(chuyen_bay_id):
-    count_ghe = Ghe.query.filter(Ghe.Chiec_may_bay_id == chuyen_bay_id).count()
+    chuyen = Chuyen_bay.query.get(chuyen_bay_id)
+    count_ghe = Ghe.query.filter(Ghe.Chiec_may_bay_id == chuyen.may_bay_id).count()
     ds_ghe = load_ds_ghe(chuyen_bay_id)
     size = int((count_ghe / 3) + 1)
     table = []
@@ -164,10 +175,16 @@ def load_table_ghe(chuyen_bay_id):
         table.append(temp)
     return table
 def load_gia_ve_by_chuyen_bay(tuyen_id, hang_ve):
-    chuyen = Chuyen_bay.query.filter(Chuyen_bay.tuyen_bay_id == tuyen_id).first()
-    price = Ve_may_bay.query.filter(Ve_may_bay.chuyen_bay_id == chuyen.id,
-                                    Ve_may_bay.hang_ve.__eq__(hang_ve)).first()
-    return price.gia_tien
+    ds_gia = []
+    chuyen = Chuyen_bay.query.filter(Chuyen_bay.tuyen_bay_id == tuyen_id).all()
+    for c in chuyen:
+        price = Ve_may_bay.query.filter(Ve_may_bay.chuyen_bay_id == c.id,
+                                        Ve_may_bay.hang_ve.__eq__(hang_ve)).first()
+        ds_gia.append(price)
+
+    if ds_gia:
+        return ds_gia
+    else: raise Exception("Không tìm được chuyến bay")
 
 def load_gia_ve(chuyen_bay):
     query = []
@@ -177,5 +194,129 @@ def load_gia_ve(chuyen_bay):
             if Ve_may_bay.chuyen_bay_id == c.id:
                 query.append(v)
     return query
+def load_count_chuyen_bay(tuyen_bay_id):
+    return Chuyen_bay.query.filter(Chuyen_bay.tuyen_bay_id == tuyen_bay_id).count()
+def get_user_by_id(user_id):
+    return Nguoi_dung.query.get(user_id)
+
+def get_ve_bay_da_dat(chuyen_bay_id):
+    return Ghe.query.filter(Chuyen_bay.id == chuyen_bay_id, Ghe.trang_thai is True).all()
+def get_ve_chua_dat(chuyen_bay_id):
+    chuyen = Chuyen_bay.query.get(chuyen_bay_id)
+
+    return  Ghe.query.filter(Ghe.Chiec_may_bay_id == chuyen.may_bay_id, Ghe.trang_thai == False).all()
+def check_vi_tri(ghe_id):
+    if ghe_id:
+        ghe = Ghe.query.get(ghe_id)
+        if ghe:
+           if ghe.trang_thai == False:
+               return True
+           else:
+               return False
+    return False
 
 
+def get_chuyen_bay_by_id(chuyen_bay_id):
+    return Chuyen_bay.query.get(chuyen_bay_id)
+def get_ten_tuyen_bay_by_chuyen_bay(chuyen_bay_id):
+    chuyen = Chuyen_bay.query.get(chuyen_bay_id)
+    tuyen_id = chuyen.tuyen_bay_id
+    return Tuyen_bay.query.get(tuyen_id)
+
+def get_ve_by_chuyen_bay_id(chuyen_bay_id):
+    return Ve_may_bay.query.filter(Ve_may_bay.chuyen_bay_id == chuyen_bay_id).first()
+
+def xoa_ve(ve_id):
+    ve_may_bay = Ve_may_bay.query.get(ve_id)
+    user_id = current_user.id
+    hoa_don = Hoa_don.query.filter(Hoa_don.nguoi_thanh_toan == user_id).first()
+    if ve_may_bay:
+        ve_may_bay.trang_thai = False
+        ve_may_bay.ten = None
+        ve_may_bay.ngay_sinh = None
+        ve_may_bay.cccd = None
+        ve_may_bay.hoa_don_id = None
+        ve_may_bay.ghe_id = None
+        ve_may_bay.nguoi_mua_id = None
+        # cập nhật lại số lượng vé
+        so_luong_ve = Ve_may_bay.query.filter(Ve_may_bay.hoa_don_id == hoa_don.id).count()
+        hoa_don.so_luong_ve = so_luong_ve
+        # cập nhật lại tổng tiền
+        tong_tien = hoa_don.tong_tien
+        tien_ve = ve_may_bay.gia_tien
+        hoa_don.tong_tien = tong_tien - tien_ve
+
+        db.session.add(ve_may_bay)
+        db.session.commit()
+        db.session.add(hoa_don)
+        db.session.commit()
+
+
+
+def dat_ve(ten, ngay_sinh, cccd, vi_tri_ngoi, chuyen,current_user):
+    if current_user.is_authenticated:
+        ghe = Ghe.query.get(vi_tri_ngoi)
+        chuyen_bay = Chuyen_bay.query.get(chuyen)
+        ve_may_bay = Ve_may_bay.query.filter(Ve_may_bay.chuyen_bay_id == chuyen_bay.id,
+                                             Ve_may_bay.trang_thai == False).first()
+        if ve_may_bay:
+            ve_may_bay.ten = ten
+            ve_may_bay.ngay_sinh = ngay_sinh
+            ve_may_bay.cccd = cccd
+            ve_may_bay.trang_thai = True
+            ve_may_bay.ghe_id = ghe.id
+            ve_may_bay.nguoi_mua_id = current_user.id
+            ghe.trang_thai = True
+            thoi_gian_thanh_toan = datetime.now()
+            so_luong_ve = 1
+            hoa_don = Hoa_don.query.filter(Hoa_don.nguoi_thanh_toan == current_user.id,
+                                           Hoa_don.trang_thai == False).first()
+            if hoa_don:
+                ve_may_bay.hoa_don_id = hoa_don.id
+                so_ve = hoa_don.so_luong_ve
+                tong_gia = hoa_don.tong_tien
+                hoa_don.so_luong_ve = so_ve + 1
+                hoa_don.tong_tien = ve_may_bay.gia_tien + tong_gia
+                db.session.add(hoa_don)
+                db.session.commit()
+            else:
+                gia = ve_may_bay.gia_tien
+                h = Hoa_don(thoi_gian_thanh_toan=thoi_gian_thanh_toan, so_luong_ve=so_luong_ve,
+                            nguoi_thanh_toan=current_user.id)
+                db.session.add(h)
+                db.session.commit()
+                new_hoa_don = Hoa_don.query.filter(Hoa_don.nguoi_thanh_toan == current_user.id,
+                                                   Hoa_don.trang_thai == False).first()
+                ve_may_bay.hoa_don_id = new_hoa_don.id
+                db.session.add(ve_may_bay)
+                db.session.commit()
+            db.session.add(ve_may_bay)
+            db.session.commit()
+        else: raise Exception("Vé đã được đặt")
+    else: raise Exception("chưa được đăng nhập")
+
+
+def tong_ve(ten):
+    count = Ve_may_bay.query.filter(Ve_may_bay.ten.__eq__(ten)).count()
+def load_ds_ve_chua_thanh_toan(user):
+    hoa_don = Hoa_don.query.filter(Hoa_don.nguoi_thanh_toan == user.id,
+                                   Hoa_don.trang_thai == False).first()
+    if hoa_don:
+        return Ve_may_bay.query.filter(Ve_may_bay.hoa_don_id == hoa_don.id).all()
+
+
+
+def tong_tien():
+    hoa_don = Hoa_don.query.filter(Hoa_don.nguoi_thanh_toan == current_user.id,
+                                   Hoa_don.trang_thai == False).first()
+    if hoa_don:
+        ds_ve = Ve_may_bay.query.filter(Ve_may_bay.hoa_don_id == hoa_don.id).all()
+        tong = 0
+        if ds_ve:
+            for i in ds_ve:
+                tong = tong + i.gia_tien
+        hoa_don.tong_tien = tong
+        db.session.add(hoa_don)
+        db.session.commit()
+        return tong
+    else: return "Ban chua mua hang"
